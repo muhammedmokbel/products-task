@@ -20,7 +20,7 @@ const Ad = props => {
     return (
         <StyledFaceItem>
             <a target="_blank" href={""} style={{position:'relative'}}>
-                <img alt="Ad Image" class="ad" src={`http://localhost:3000/ads/?r=${Math.floor(Math.random() * 1000)}`}/>
+                <img alt="Ad Image" className="ad" src={`http://localhost:3000/ads/?r=${Math.floor(Math.random() * 1000)}`}/>
                 <AdText>A word from our sponsors</AdText>
             </a>
         </StyledFaceItem>

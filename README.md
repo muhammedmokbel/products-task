@@ -5,6 +5,16 @@ This is an ecommerce site, where you can buy all sorts of ascii faces like `(ノ
 
 Please read the instructions and FAQ below before beginning.
 
+How to run the app:
+----
+- `git clone https://github.com/MahmoudMH/Ascii-faces-bonat-test`
+- `git checkout origin master`
+- `cd Ascii-faces-bonat-test`
+- `npm install`
+- `npm start`
+- Open http://localhost:8000 in your browser
+
+
 Features
 ----
 

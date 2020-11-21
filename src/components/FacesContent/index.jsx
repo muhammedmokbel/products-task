@@ -74,11 +74,11 @@ const FacesItem = props => {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <StyledSpan>{`Price: ${price}$`}</StyledSpan>
             <StyledSpan>{`Size: ${size}`}</StyledSpan>
-            <StyledSpan date={true}>{date}</StyledSpan>
+            <StyledSpan date>{date}</StyledSpan>
         </div>
         <StyledButton onClick={handleAddItem}>Add to cart</StyledButton>
     </StyledFaceItem>
-}
+};
 
 const FacesContent = props => {
     const context = useContext(MainContext);

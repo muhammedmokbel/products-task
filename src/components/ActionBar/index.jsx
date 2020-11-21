@@ -133,7 +133,7 @@ const ActionsBar = props => {
                         <div className="content">
                             {
                                 cart.length && cart.map(({ item }) => {
-                                    return <StyledCartItem id={item.id}>
+                                    return <StyledCartItem key={item.id}>
                                         <StyledSpan>Face: {item.face}</StyledSpan>
                                         <StyledSpan>Price: {item.price}$</StyledSpan>
                                         <h5 style={{ marginTop: 30 }}>Quantity: {item.quantity}</h5>
