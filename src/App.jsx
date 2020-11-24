@@ -13,7 +13,7 @@ const App = (props) => {
     const [page, setPage] = useState(1);
     const [sortValue, setSortValue] = useState("");
     const [isFetching, setIsFetching] = useState(false);
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null);
     useEffect(async () => {
         const fetchData = async () => {
             setIsFetching(true)
@@ -43,7 +43,7 @@ const App = (props) => {
             setSortValue,
             cartQuantity, 
             setCartQuantity,
-            error, setError
+            error, setError,
         }}>
             
             <Header />
