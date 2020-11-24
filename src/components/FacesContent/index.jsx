@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import fetchFaces from '../../api/fetchFaces';
 import PropagateLoader from "react-spinners/PropagateLoader";
 import Ad from '../Ad/index';
+// import { usePrevious } from '../../utils/usePrevious';
 
 
 export const StyledFaceItem = styled.div`
@@ -54,18 +55,18 @@ const StyledButton = styled.button`
 `
 
 const FacesItem = props => {
-    const { id, size, price, face, date } = props?.item;
+    const { id, size, price, face, date } = props ?.item;
     const context = useContext(MainContext);
     const { cart, addToCart, setCartQuantity } = context;
     const handleAddItem = () => {
         setCartQuantity((e) => ++e);
         const itemExsitsIndex = cart.findIndex(({ item }) => item.id === id);
-        if (itemExsitsIndex !== -1){
+        if (itemExsitsIndex !== -1) {
             cart[itemExsitsIndex]['item']['quantity'] = cart[itemExsitsIndex]['item']['quantity'] + 1;
             addToCart([...cart])
-        } else { 
-            const newItem = {...props.item, quantity: 1}
-            addToCart([...cart, {item: newItem}])
+        } else {
+            const newItem = { ...props.item, quantity: 1 }
+            addToCart([...cart, { item: newItem }])
         }
     }
 
@@ -82,28 +83,42 @@ const FacesItem = props => {
 
 const FacesContent = props => {
     const context = useContext(MainContext);
-    const [loadingMore, setLoadingMore] = useState(false)
-    const { data = [], sortValue, setData, isFetching, setIsFetching, page, setPage } = context;
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [isLastPage, setIsLastPage] = useState(false);
+    const { data = [], sortValue, setData, isFetching, setIsFetching, page, setPage, setError } = context;
+
     useEffect(async () => {
-        let sortedResult = data;
-        if (["price", "size"].includes(sortValue)) {
-            setIsFetching(true)
-            const { data: sortedData } = await fetchFaces(page, sortValue);
-            setIsFetching(false);
-            sortedResult = sortedData
-        } else {
-            sortedResult = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        try {
+            let sortedResult = data;
+            if (["price", "size", 'id'].includes(sortValue)) {
+                setIsFetching(true)
+                const { data: sortedData } = await fetchFaces(0, sortValue);
+                setIsFetching(false);
+                sortedResult = sortedData
+            } else {
+                sortedResult = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            setData([...sortedResult]);
+        } catch (error) {
+            console.log("Error useEffect FacesContent", error);
+            setError(error)
         }
-        setData([...sortedResult]);
     }, [sortValue])
 
     const handleScroll = async ({ target }) => {
-        if (target.scrollHeight - target.scrollTop === target.clientHeight) {
-            setLoadingMore(true)
-            const { data: extraData } = await fetchFaces(page);
-            setPage(pre => ++pre);
-            setLoadingMore(false)
-            setData([...data, ...extraData])
+        try {
+            if (isLastPage) return;
+            if (target.scrollHeight - target.scrollTop === target.clientHeight) {
+                setLoadingMore(true)
+                const { data: extraData } = await fetchFaces(page);
+                setPage(pre => ++pre);
+                setLoadingMore(false);
+                if (!extraData.length) setIsLastPage(true);
+                setData([...data, ...extraData])
+            }
+        } catch (error) {
+            console.log("Error handleScroll", error);
+            setError(error)
         }
     }
 
@@ -115,14 +130,18 @@ const FacesContent = props => {
         </WrapperLoading>
     }
 
+
     return <>
         <div className={'faces-content'} onScroll={handleScroll}>
-            {data.length && data.map((item,index) => {
+            {data.length && data.map((item, index) => {
                 return ((index + 1) % 20) !== 0 ? <FacesItem key={item.id} item={item} /> : <Ad />
             })}
         </div>
         {loadingMore && <WrapperLoading>
             <PropagateLoader />
+        </WrapperLoading>}
+        {isLastPage && <WrapperLoading>
+            <h2>~ end of catalogue ~</h2>
         </WrapperLoading>}
     </>
 }
