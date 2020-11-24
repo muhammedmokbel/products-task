@@ -12,6 +12,7 @@ const options = [
     {
         value: '', label: <span style={{ color: 'gray' }}>{"Sort By..."}</span>, isDisabled: true
     },
+    { value: 'id', label: 'Id' },
     { value: 'size', label: 'Size' },
     { value: 'price', label: 'Price' },
     { value: 'date', label: 'Date' }
