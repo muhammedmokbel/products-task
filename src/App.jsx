@@ -13,15 +13,19 @@ const App = (props) => {
     const [page, setPage] = useState(1);
     const [sortValue, setSortValue] = useState("");
     const [isFetching, setIsFetching] = useState(false);
-
+    const [error, setError] = useState(null)
     useEffect(async () => {
         const fetchData = async () => {
             setIsFetching(true)
-            return await fetchFaces(0)
+            return await fetchFaces(0, 'id')
         }
-        const {data} = await fetchData();
-        setData(data);
-        setIsFetching(false)
+        try {
+            const {data} = await fetchData();
+            setData(data);
+            setIsFetching(false)
+        } catch (e) {
+            setError(e)            
+        }
     }, [])
 
 
@@ -38,11 +42,15 @@ const App = (props) => {
             sortValue,
             setSortValue,
             cartQuantity, 
-            setCartQuantity
+            setCartQuantity,
+            error, setError
         }}>
+            
             <Header />
             <ActionsBar />
-            <FacesContent />
+            {error ? <h3>Error happend! come back later!</h3>:
+                <FacesContent />
+            }
         </MainContext.Provider>
     )
 }
